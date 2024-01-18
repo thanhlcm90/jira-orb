@@ -56,6 +56,11 @@ jobs:
         default: true
         description: |
           Validate the notification has been sent
+      git_reset:
+        type: boolean
+        default: true
+        description: |
+          Reset the git before run test
       mock:
         type: steps
         default: []
@@ -63,7 +68,10 @@ jobs:
           Mock any test data and trigger a notification here.
     steps:
       - checkout
-      - git_reset
+      - when:
+          condition: << parameters.git_reset >>
+          steps:
+            - git_reset
       - steps: << parameters.mock >>
       - when:
           condition: << parameters.validate >>
@@ -96,7 +104,7 @@ workflows:
             - jira/notify:
                 pipeline_id: "<< pipeline.id >>"
                 pipeline_number: "<< pipeline.number >>"
-                pipeline_base_revision: "<< pipeline.git.base_revision >>"
+                pipeline_base_revision: "HEAD"
                 ignore_errors: true
                 webhook_url: https://circleci.com/ # This is an invalid URL, so the post will fail, but be ignored.
       - test:
@@ -108,6 +116,27 @@ workflows:
                 - linux-docker
                 - macos
           context: CPE_JIRA_TESTING
+          mock:
+            - run:
+                name: Manually set commit message for test
+                command: |
+                  git add .
+                  git commit -m "test: ${CIRCLE_JOB} CFJ-2"
+            - jira/notify:
+                pipeline_id: "<< pipeline.id >>"
+                pipeline_number: "<< pipeline.number >>"
+                pipeline_base_revision: "HEAD"
+                debug: true
+      - test:
+          name: test-base-revision-<<matrix.executor>>
+          matrix:
+            alias: test-base-revision
+            parameters:
+              executor:
+                - linux-docker
+                - macos
+          context: CPE_JIRA_TESTING
+          git_reset: false
           mock:
             - run:
                 name: Manually set commit message for test
@@ -138,7 +167,7 @@ workflows:
             - jira/notify:
                 pipeline_id: "<< pipeline.id >>"
                 pipeline_number: "<< pipeline.number >>"
-                pipeline_base_revision: "<< pipeline.git.base_revision >>"
+                pipeline_base_revision: "HEAD"
                 debug: true
           filters: *filters
       - test:
@@ -159,7 +188,7 @@ workflows:
             - jira/notify:
                 pipeline_id: "<< pipeline.id >>"
                 pipeline_number: "<< pipeline.number >>"
-                pipeline_base_revision: "<< pipeline.git.base_revision >>"
+                pipeline_base_revision: "HEAD"
                 ignore_errors: false
                 service_id: "123"
                 job_type: deployment
