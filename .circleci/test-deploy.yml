@@ -96,6 +96,7 @@ workflows:
             - jira/notify:
                 pipeline_id: "<< pipeline.id >>"
                 pipeline_number: "<< pipeline.number >>"
+                pipeline_base_revision: "<< pipeline.git.base_revision >>"
                 ignore_errors: true
                 webhook_url: https://circleci.com/ # This is an invalid URL, so the post will fail, but be ignored.
       - test:
@@ -116,6 +117,7 @@ workflows:
             - jira/notify:
                 pipeline_id: "<< pipeline.id >>"
                 pipeline_number: "<< pipeline.number >>"
+                pipeline_base_revision: "<< pipeline.git.base_revision >>"
                 debug: true
       - test:
           name: test-scan-branch-<<matrix.executor>>
@@ -136,6 +138,7 @@ workflows:
             - jira/notify:
                 pipeline_id: "<< pipeline.id >>"
                 pipeline_number: "<< pipeline.number >>"
+                pipeline_base_revision: "<< pipeline.git.base_revision >>"
                 debug: true
           filters: *filters
       - test:
@@ -156,6 +159,7 @@ workflows:
             - jira/notify:
                 pipeline_id: "<< pipeline.id >>"
                 pipeline_number: "<< pipeline.number >>"
+                pipeline_base_revision: "<< pipeline.git.base_revision >>"
                 ignore_errors: false
                 service_id: "123"
                 job_type: deployment

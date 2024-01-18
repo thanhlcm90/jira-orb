@@ -20,6 +20,7 @@ usage:
         - jira/notify:
             pipeline_id: "<< pipeline.id >>"
             pipeline_number: "<< pipeline.number >>"
+            pipeline_base_revision: "HEAD"
   workflows:
     build-workflow:
       jobs:
