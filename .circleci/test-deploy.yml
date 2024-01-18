@@ -138,11 +138,6 @@ workflows:
           context: CPE_JIRA_TESTING
           git_reset: false
           mock:
-            - run:
-                name: Manually set commit message for test
-                command: |
-                  git add .
-                  git commit -m "test: ${CIRCLE_JOB} CFJ-2"
             - jira/notify:
                 pipeline_id: "<< pipeline.id >>"
                 pipeline_number: "<< pipeline.number >>"

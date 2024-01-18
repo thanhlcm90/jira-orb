@@ -240,8 +240,8 @@ JIRA_VAL_PIPELINE_BASE_REVISION=$(circleci env subst "${JIRA_VAL_PIPELINE_BASE_R
 TIME_EPOCH=$(date +%s)
 TIME_STAMP=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 # JIRA_DEBUG_TEST_COMMIT is only used in testing
-COMMIT_MESSAGE=$(git show -s --format='%s' "${JIRA_VAL_PIPELINE_BASE_REVISION}..${CIRCLE_SHA1}")
-COMMIT_BODY=$(git show -s --format='%b' "${JIRA_VAL_PIPELINE_BASE_REVISION}..${CIRCLE_SHA1}")
+COMMIT_MESSAGE=$(git show -s --format='%s' "${JIRA_VAL_PIPELINE_BASE_REVISION:-$CIRCLE_SHA1}")
+COMMIT_BODY=$(git show -s --format='%b' "${JIRA_VAL_PIPELINE_BASE_REVISION:-$CIRCLE_SHA1}")
 JIRA_BUILD_STATUS=$(cat /tmp/circleci_jira_status)
 PROJECT_VCS=""
 PROJECT_SLUG=""
